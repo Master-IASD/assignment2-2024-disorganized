@@ -5,7 +5,7 @@ import argparse
 
 
 from model import Generator
-from utils import load_model
+from utils import load_model_G
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate Normalizing Flow.')
@@ -13,6 +13,12 @@ if __name__ == '__main__':
                       help="The batch size to use for training.")
     args = parser.parse_args()
 
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    elif torch.backends.mps.is_available():
+        device = torch.device('mps')
+    else:
+        device = torch.device('cpu')
 
 
 
@@ -20,9 +26,9 @@ if __name__ == '__main__':
     # Model Pipeline
     mnist_dim = 784
 
-    model = Generator(g_output_dim = mnist_dim).cuda()
-    model = load_model(model, 'checkpoints')
-    model = torch.nn.DataParallel(model).cuda()
+    model = Generator(g_output_dim = mnist_dim).to(device) #cuda()
+    model = load_model_G(model, 'checkpoints')
+    model = torch.nn.DataParallel(model).to(device) #cuda()
     model.eval()
 
     print('Model loaded.')
@@ -35,7 +41,7 @@ if __name__ == '__main__':
     n_samples = 0
     with torch.no_grad():
         while n_samples<10000:
-            z = torch.randn(args.batch_size, 100).cuda()
+            z = torch.randn(args.batch_size, 100).to(device) #cuda()
             x = model(z)
             x = x.reshape(args.batch_size, 28, 28)
             for k in range(x.shape[0]):
