@@ -5,7 +5,7 @@ import argparse
 
 
 from model import Generator
-from utils import load_model
+from utils import load_model_G
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate Normalizing Flow.')
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     mnist_dim = 784
 
     model = Generator(g_output_dim = mnist_dim).to(device) #cuda()
-    model = load_model(model, 'checkpoints')
+    model = load_model_G(model, 'checkpoints')
     model = torch.nn.DataParallel(model).to(device) #cuda()
     model.eval()
 
