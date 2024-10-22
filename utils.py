@@ -56,7 +56,12 @@ def save_models(G, D, folder):
     torch.save(D.state_dict(), os.path.join(folder,'D.pth'))
 
 
-def load_model(G, folder):
+def load_model_G(G, folder):
     ckpt = torch.load(os.path.join(folder,'G.pth'))
     G.load_state_dict({k.replace('module.', ''): v for k, v in ckpt.items()})
     return G
+
+def load_model_D(D, folder):
+    ckpt = torch.load(os.path.join(folder,'D.pth'))
+    D.load_state_dict({k.replace('module.', ''): v for k, v in ckpt.items()})
+    return D
