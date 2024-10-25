@@ -95,9 +95,9 @@ if __name__ == '__main__':
             G_train(x, G, D, G_optimizer, criterion, device)
 
         if epoch % 10 == 0:
-            save_models(G, D, 'checkpoints')
+            save_models_G_D(G, D, 'checkpoints')
     
-    save_models(G, D, 'checkpoints')        
+    save_models_G_D(G, D, 'checkpoints')        
     print()    
     print('Training done')
 

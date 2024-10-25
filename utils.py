@@ -112,6 +112,11 @@ def load_model_D(D, folder):
     D.load_state_dict({k.replace('module.', ''): v for k, v in ckpt.items()})
     return D
 
+def load_model_w(w, folder):
+    ckpt = torch.load(os.path.join(folder,'w.pth'))
+    w.load_state_dict({k.replace('module.', ''): v for k, v in ckpt.items()})
+    return w
+
 def gradient_penalty(x_real, x_fake, D, device):
         batch_size = x_real.size(0)
         # Sample Epsilon from uniform distribution
