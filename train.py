@@ -8,19 +8,20 @@ import torch.optim as optim
 
 
 from model import Generator, Discriminator
-from utils import D_train, G_train, save_models, load_model_G, load_model_D
+from utils import D_train, G_train, save_models_G_D, load_model_G, load_model_D
 
 
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train Normalizing Flow.')
-    parser.add_argument("--epochs", type=int, default=1,
+    parser.add_argument("--epochs", type=int, default=100,
                         help="Number of epochs for training.")
-    parser.add_argument("--lr", type=float, default=0.0002,
+    parser.add_argument("--lr", type=float, default=0.001,
                       help="The learning rate to use for training.")
     parser.add_argument("--batch_size", type=int, default=64, 
                         help="Size of mini-batches for SGD")
+    parser.add_argument("--train_from_checkpoint", default=False)
 
     args = parser.parse_args()
 
@@ -33,7 +34,7 @@ if __name__ == '__main__':
 
     print('Device :', device)
     
-    os.makedirs('chekpoints', exist_ok=True)
+    os.makedirs('checkpoints', exist_ok=True)
     os.makedirs('data', exist_ok=True)
 
     # Data Pipeline
@@ -57,16 +58,18 @@ if __name__ == '__main__':
     print('Model Loading...')
     mnist_dim = 784
     
-    G = Generator(g_output_dim = mnist_dim).to(device)
-    G = load_model_G(G, 'checkpoints')
-    G = torch.nn.DataParallel(G).to(device)
+    if args.train_from_checkpoint:
+        G = Generator(g_output_dim = mnist_dim).to(device)
+        G = load_model_G(G, 'checkpoints')
+        G = torch.nn.DataParallel(G).to(device)
     
-    D = Discriminator(mnist_dim).to(device)
-    D = load_model_D(D, 'checkpoints')
-    D = torch.nn.DataParallel(D).to(device)
+        D = Discriminator(mnist_dim).to(device)
+        D = load_model_D(D, 'checkpoints')
+        D = torch.nn.DataParallel(D).to(device)
     
-    #G = torch.nn.DataParallel(Generator(g_output_dim = mnist_dim)).to(device)#.cuda()
-    #D = torch.nn.DataParallel(Discriminator(mnist_dim)).to(device)#.cuda()
+    else :
+        G = torch.nn.DataParallel(Generator(g_output_dim = mnist_dim)).to(device)
+        D = torch.nn.DataParallel(Discriminator(mnist_dim)).to(device)
 
 
     # model = DataParallel(model).cuda()
@@ -93,7 +96,9 @@ if __name__ == '__main__':
 
         if epoch % 10 == 0:
             save_models(G, D, 'checkpoints')
-                
+    
+    save_models(G, D, 'checkpoints')        
+    print()    
     print('Training done')
 
         
