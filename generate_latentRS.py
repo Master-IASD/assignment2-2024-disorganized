@@ -7,6 +7,7 @@ import argparse
 from model import Generator, Latent_reweighting
 from utils import load_model_G, load_model_w
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate Normalizing Flow.')
     parser.add_argument("--batch_size", type=int, default=2048,
@@ -39,7 +40,7 @@ if __name__ == '__main__':
     print('models loaded.')
 
     print('Start Generating')
-    os.makedirs('samples', exist_ok=True)
+    os.makedirs('samples_latentRS', exist_ok=True)
 
     n_samples = 0
     with torch.no_grad():
@@ -47,9 +48,9 @@ if __name__ == '__main__':
             z = torch.randn(args.batch_size, 100).to(device)
             a = torch.rand(args.batch_size).to(device)
             m = 3
-            x = G(z[w(z)/m >= a])
+            x = G(z[(w(z)/m >= a.unsqueeze(1)).squeeze()])
             x = x.reshape(x.shape[0], 28, 28)
             for k in range(x.shape[0]):
                 if n_samples<10000:
-                    torchvision.utils.save_image(x[k:k+1], os.path.join('samples', f'{n_samples}.png'))         
+                    torchvision.utils.save_image(x[k:k+1], os.path.join('samples_latentRS', f'{n_samples}.png'))         
                     n_samples += 1

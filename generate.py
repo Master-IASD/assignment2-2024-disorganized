@@ -7,6 +7,7 @@ import argparse
 from model import Generator
 from utils import load_model_G
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate Normalizing Flow.')
     parser.add_argument("--batch_size", type=int, default=2048,
@@ -48,6 +49,3 @@ if __name__ == '__main__':
                 if n_samples<10000:
                     torchvision.utils.save_image(x[k:k+1], os.path.join('samples', f'{n_samples}.png'))         
                     n_samples += 1
-
-
-    
