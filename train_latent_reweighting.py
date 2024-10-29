@@ -70,7 +70,12 @@ if __name__ == '__main__':
     # define optimizers
     Dw_optimizer = optim.Adam(Dw.parameters(), lr = 4e-4, betas=(0.5,0.5))
     w_optimizer = optim.Adam(w.parameters(), lr = 1e-4, betas=(0.5,0.5))
-
+    
+    # define hyperparameters for latent reweighting :
+    m = 3
+    lambda1 = 10
+    lambda2 = 3
+    
     print('Start Training :')
     
     n_epoch = args.epochs
@@ -78,7 +83,7 @@ if __name__ == '__main__':
         for batch_idx, (x, _) in enumerate(train_loader):
             x = x.view(-1, mnist_dim)
             Dw_train(x, w, G, Dw, Dw_optimizer, device)
-            w_train(x, w, G, Dw, w_optimizer, device)
+            w_train(x, w, G, Dw, w_optimizer, device, m=m, lambda1=lambda1, lambda2=lambda2)
 
         if epoch % 10 == 0:
             save_models_Dw_w(Dw, w, 'checkpoints')
