@@ -3,6 +3,8 @@ import torchvision
 import os
 import argparse
 
+## ----- Generate from latent GA
+
 
 from model import Generator, Latent_reweighting
 from utils import load_model_G, load_model_w
@@ -40,17 +42,29 @@ if __name__ == '__main__':
     print('models loaded.')
 
     print('Start Generating')
-    os.makedirs('samples_latentRS', exist_ok=True)
+    os.makedirs('samples_latentGA', exist_ok=True)
+    
+    # hyperparameter for latent gradient ascent :
+    n_step = 10
+    step_size = 5e-2
 
     n_samples = 0
-    with torch.no_grad():
-        while n_samples<10000:
-            z = torch.randn(args.batch_size, 100).to(device)
-            a = torch.rand(args.batch_size).to(device)
-            m = 3
-            x = G(z[(w(z)/m >= a.unsqueeze(1)).squeeze()])
+
+    while n_samples<10000:
+        z = torch.randn(args.batch_size, 100, requires_grad=True).to(device)
+
+        for i_step in range(n_step):
+            pseudo_loss = torch.sum(w(z))
+            grad_z = torch.autograd.grad(pseudo_loss,z)[0]
+
+            # Projection step for high-dimensional gaussians
+            grad_z = grad_z - torch.sum(torch.mul(z,grad_z),dim=1).unsqueeze(1)/10*z # 10 = sqrt(d) dimension of latent space
+            z = z + step_size*grad_z
+            
+        with torch.no_grad():
+            x = G(z)
             x = x.reshape(x.shape[0], 28, 28)
             for k in range(x.shape[0]):
                 if n_samples<10000:
-                    torchvision.utils.save_image(x[k:k+1], os.path.join('samples_latentRS', f'{n_samples}.png'))         
+                    torchvision.utils.save_image(x[k:k+1], os.path.join('samples_latentGA', f'{n_samples}.png'))         
                     n_samples += 1
