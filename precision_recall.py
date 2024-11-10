@@ -7,6 +7,8 @@ from torch.utils.data import Dataset, DataLoader
 from PIL import Image
 from collections import namedtuple
 from tqdm import tqdm
+from pytorch_fid.fid_score import calculate_fid_given_paths
+import subprocess
 
 Manifold = namedtuple('Manifold', ['features', 'radii'])
 PrecisionAndRecall = namedtuple('PrecisionAndRecall', ['precision', 'recall'])
@@ -107,16 +109,17 @@ def compute_metric(manifold_ref, feats_subject, desc=""):
         count += (dist[:, i] < manifold_ref.radii).any()
     return count / feats_subject.shape[0]
 
-if __name__ == "__main__":
-    real_images_path = "samples/real_images"
-    fake_images_path = "samples/fake_images"
+def compute_precision_recall(sample_file, device='cpu'):
 
-    ipr = IPR(device=torch.device("cuda" if torch.cuda.is_available() else "cpu"), batch_size=128, k=1)
+    ipr = IPR(device=device, k=5, batch_size=64, num_samples=10000)
+    ipr.compute_manifold_ref('data/png_test')
 
-    print("Computing reference manifold for real images...")
-    ipr.compute_manifold_ref(real_images_path)
+    metric = ipr.precision_and_recall(sample_file)
+    
+    return metric.precision, metric.recall#, fid_value
 
-    print("Calculating precision and recall for fake images...")
-    precision, recall = ipr.precision_and_recall(fake_images_path)
-    print(f"Precision: {precision:.4f}")
-    print(f"Recall: {recall:.4f}")
+def compute_fid(sample_file, device='cpu'):
+    subprocess.run(["python", "-m", "pytorch_fid", 'data/png_test', sample_file])
+    
+    #fid_value = calculate_fid_given_paths(['data/png_test', 'samples'],batch_size=64, device=device, dims=2048)
+    #return fid_value

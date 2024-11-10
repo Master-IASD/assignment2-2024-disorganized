@@ -21,7 +21,7 @@ if __name__ == '__main__':
                       help="The learning rate to use for training.")
     parser.add_argument("--batch_size", type=int, default=64, 
                         help="Size of mini-batches for SGD")
-    parser.add_argument("--train_from_checkpoint", default=True)
+    parser.add_argument("--train_from_checkpoint", default=False)
 
     args = parser.parse_args()
 
@@ -67,7 +67,7 @@ if __name__ == '__main__':
         D = load_model_D(D, 'checkpoints')
         D = torch.nn.DataParallel(D).to(device)
     
-    else : 
+    else :
         G = torch.nn.DataParallel(Generator(g_output_dim = mnist_dim)).to(device)
         D = torch.nn.DataParallel(Discriminator(mnist_dim)).to(device)
 

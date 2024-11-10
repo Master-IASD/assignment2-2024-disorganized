@@ -42,7 +42,7 @@ if __name__ == '__main__':
     print('models loaded.')
 
     print('Start Generating')
-    os.makedirs('samples_latentRS', exist_ok=True)
+    os.makedirs('samples', exist_ok=True)
 
     n_samples = 0
     with torch.no_grad():

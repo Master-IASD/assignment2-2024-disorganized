@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
 
     print('Start Generating')
-    os.makedirs('samples', exist_ok=True)
+    os.makedirs('samples_baseline', exist_ok=True)
 
     n_samples = 0
     with torch.no_grad():
@@ -47,5 +47,5 @@ if __name__ == '__main__':
             x = x.reshape(args.batch_size, 28, 28)
             for k in range(x.shape[0]):
                 if n_samples<10000:
-                    torchvision.utils.save_image(x[k:k+1], os.path.join('samples', f'{n_samples}.png'))         
+                    torchvision.utils.save_image(x[k:k+1], os.path.join('samples_baseline', f'{n_samples}.png'))         
                     n_samples += 1
