@@ -1,0 +1,70 @@
+New test
+Number of epochs : 10
+precision : 0.1459
+recall : 0.0
+Number of epochs : 20
+precision : 0.2723
+recall : 0.1055
+Number of epochs : 30
+precision : 0.33
+recall : 0.1365
+Number of epochs : 40
+precision : 0.4226
+recall : 0.266
+Number of epochs : 50
+precision : 0.4907
+recall : 0.3435
+Number of epochs : 60
+precision : 0.5412
+recall : 0.3937
+Number of epochs : 70
+precision : 0.5586
+recall : 0.4512
+Number of epochs : 80
+precision : 0.5986
+recall : 0.4887
+Number of epochs : 90
+precision : 0.598
+recall : 0.4717
+Number of epochs : 100
+precision : 0.607
+recall : 0.542
+Number of epochs : 110
+precision : 0.6209
+recall : 0.5581
+Number of epochs : 120
+precision : 0.6409
+recall : 0.5223
+Number of epochs : 130
+precision : 0.6496
+recall : 0.5496
+Number of epochs : 140
+precision : 0.6479
+recall : 0.5341
+Number of epochs : 150
+precision : 0.6796
+recall : 0.5165
+Number of epochs : 160
+precision : 0.6718
+recall : 0.5432
+Number of epochs : 170
+precision : 0.6901
+recall : 0.5283
+Number of epochs : 180
+precision : 0.6924
+recall : 0.5254
+Number of epochs : 190
+precision : 0.6935
+recall : 0.5028
+Number of epochs : 200
+precision : 0.6865
+recall : 0.5187
+Number of epochs : 210
+precision : 0.6965
+recall : 0.4893
+Number of epochs : 220
+precision : 0.6477
+recall : 0.4774
+Number of epochs : 230
+precision : 0.6795
+recall : 0.4835
